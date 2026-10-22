@@ -53,6 +53,7 @@ async def test_config_flow_creates_readonly_sensors(hass):
 async def test_cloud_config_flow_and_platforms(hass):
     from tests.test_cloud_controls import circuit
     source = circuit()
+    source["name"] = ""
     data = {"installation":{"id":"test-installation"},"circuits":[source]}
     with patch("custom_components.rocon_g1_local.cloud.CloudClient.discover", return_value=[data["installation"]]), patch("custom_components.rocon_g1_local.cloud.CloudClient.snapshot", return_value=data):
         result = await hass.config_entries.flow.async_init("rocon_g1_local",context={"source":config_entries.SOURCE_USER})
@@ -63,6 +64,19 @@ async def test_cloud_config_flow_and_platforms(hass):
         assert result["step_id"] == "installation"
         result = await hass.config_entries.flow.async_configure(result["flow_id"],{"installation_id":"test-installation"})
         await hass.async_block_till_done()
+        # Optional entities must load even when the real cloud returns no name.
+        from homeassistant.helpers import entity_registry as er
+        registry = er.async_get(hass)
+        names = [item for item in registry.entities.values()
+                 if item.config_entry_id == result["result"].entry_id
+                 and item.unique_id.endswith("_name")]
+        assert len(names) == 1
+        registry.async_update_entity(names[0].entity_id, disabled_by=None)
+        await hass.config_entries.async_reload(result["result"].entry_id)
+        await hass.async_block_till_done()
+        name_state = hass.states.get(names[0].entity_id)
+        assert name_state is not None
+        assert name_state.state == ""
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["result"].state is config_entries.ConfigEntryState.LOADED
     assert len(hass.states.async_all("number")) == 3
