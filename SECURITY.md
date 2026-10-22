@@ -1,5 +1,8 @@
 # Segnalazioni e dati privati
 
+La licenza MIT riguarda il materiale originale del progetto. APK, firmware e
+sorgenti decompilati Daikin/ROTEX non vengono distribuiti o concessi in licenza.
+
 Non aprire issue pubbliche con password, cookie, API key, seriali, indirizzi,
 installation ID, catture HAR/PCAP o risposte cloud integrali. Lo strumento salva
 le risposte soltanto in `_private/`, esclusa da Git. Questo non rende sicuro
