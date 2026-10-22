@@ -1,6 +1,6 @@
 """Shared operation modes are exposed on heating circuits, never duplicated on ACS."""
 from homeassistant.components.select import SelectEntity
-from .cloud import MODES, path_get
+from .cloud import MODES, path_get, supports_cooling
 from .cloud_entity import CloudEntity
 
 
@@ -17,7 +17,7 @@ class CloudMode(CloudEntity, SelectEntity):
     def __init__(self, coordinator, entry, circuit):
         super().__init__(coordinator, entry, circuit, "mode", "Modalità condivisa riscaldamento e ACS", ("operationMode", "type"))
         metadata = coordinator.data["installation"]
-        self._attr_options = [key for key in MODES if key != "cooling" or metadata.get("heatingGeneratorType") == 0 or metadata.get("softwareNumber", 0) > 399]
+        self._attr_options = [key for key in MODES if key != "cooling" or supports_cooling(metadata)]
 
     @property
     def current_option(self):

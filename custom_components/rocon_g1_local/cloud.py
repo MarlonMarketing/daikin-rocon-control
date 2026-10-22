@@ -50,6 +50,11 @@ def number(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
+def supports_cooling(metadata):
+    return (type(metadata.get("heatingGeneratorType")) is int and metadata["heatingGeneratorType"] == 0
+            or number(metadata.get("softwareNumber")) and metadata["softwareNumber"] > 399)
+
+
 def effective(value):
     if not isinstance(value, dict):
         return None
@@ -145,7 +150,7 @@ def build_command(circuit, command, value, installation=None):
     elif command == "mode":
         if kind == "water" or value not in MODES:
             raise CloudError("Shared modes must be changed on the heating circuit")
-        if value == "cooling" and not ((installation or {}).get("heatingGeneratorType") == 0 or (installation or {}).get("softwareNumber", 0) > 399):
+        if value == "cooling" and not supports_cooling(installation or {}):
             raise CloudError("Cooling not exposed for this controller")
         changes[("operationMode", "type")] = MODES[value]
     elif command == "boost":
@@ -191,8 +196,8 @@ class CloudClient:
     def __init__(self, username, password, *, transport=None):
         self._username, self._password = username, password
         self._transport = transport
-        self._opener = build_opener(ProxyHandler({}), _NoRedirect(),
-            HTTPSHandler(context=ssl.create_default_context()), HTTPCookieProcessor(CookieJar()))
+        # Constructed in the HA event loop: defer certificate I/O to executor reads.
+        self._opener = None
         self._login_at = 0
         self._lock = threading.Lock()
         self.installations = []
@@ -207,6 +212,9 @@ class CloudClient:
             raise CloudError("Cloud route refused")
         if self._transport:
             return self._transport(path, method, payload)
+        if self._opener is None:
+            self._opener = build_opener(ProxyHandler({}), _NoRedirect(),
+                HTTPSHandler(context=ssl.create_default_context()), HTTPCookieProcessor(CookieJar()))
         data = json.dumps(payload, allow_nan=False).encode() if payload is not None else None
         request = Request(ORIGIN + path, data=data, method=method, headers={
             "Accept": "application/json", "Content-Type": "application/json", "X-Api-Version": "6"})
