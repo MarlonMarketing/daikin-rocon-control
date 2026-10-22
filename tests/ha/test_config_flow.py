@@ -81,6 +81,19 @@ async def test_cloud_config_flow_and_platforms(hass):
     assert result["result"].state is config_entries.ConfigEntryState.LOADED
     assert len(hass.states.async_all("number")) == 3
     assert len(hass.states.async_all("switch")) == 1
+    assert hass.services.has_service("rocon_g1_local", "set_schedule")
+    programs = [item for item in registry.entities.values()
+                if item.config_entry_id == result["result"].entry_id
+                and item.unique_id.endswith("_program_1_monday")]
+    assert len(programs) == 1
+    with patch.object(result["result"].runtime_data, "async_command") as command:
+        await hass.services.async_call("rocon_g1_local", "set_schedule", {
+            "entity_id": programs[0].entity_id, "program": 1,
+            "days": {"monday": "06:00-08:00;00:00-00:00;00:00-00:00"},
+            "profiles": [41, 42, 43]}, blocking=True)
+        command.assert_awaited_once_with(str(source["id"]), "schedule", {
+            "program": 1, "days": {"monday": "06:00-08:00;00:00-00:00;00:00-00:00"},
+            "profiles": [41, 42, 43]})
     sensors = [state for state in hass.states.async_all("sensor") if state.attributes.get("source") == "rocon_cloud"]
     assert sensors
     assert "synthetic-password" not in str(sensors)
