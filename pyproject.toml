@@ -16,3 +16,6 @@ rocon-diagnose = "rocon_local.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["rocon_local*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
