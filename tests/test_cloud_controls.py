@@ -4,6 +4,7 @@ from datetime import datetime, timezone, timedelta
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 SPEC = importlib.util.spec_from_file_location("cloud_under_test", Path(__file__).resolve().parents[1] / "custom_components/rocon_g1_local/cloud.py")
 cloud = importlib.util.module_from_spec(SPEC)
@@ -26,6 +27,10 @@ def circuit(kind="water"):
 
 
 class CloudCommandTests(unittest.TestCase):
+    def test_construction_does_not_load_certificates_in_ha_event_loop(self):
+        with patch.object(cloud.ssl, "create_default_context", side_effect=AssertionError("Blocking certificate I/O")):
+            cloud.CloudClient("synthetic-user", "synthetic-password")
+
     def test_profile_preserves_confirmed_and_other_profiles(self):
         original=circuit(); before=deepcopy(original)
         payload,changes=cloud.build_command(original,"profile_1",45.5)
