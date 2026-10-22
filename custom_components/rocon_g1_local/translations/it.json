@@ -56,5 +56,33 @@
       "reconfigure_successful": "Configurazione locale aggiornata.",
       "invalid_installation": "Impianto non presente in questo account."
     }
+  },
+  "services": {
+    "set_schedule": {
+      "name": "Salva programma settimanale",
+      "description": "Salva giorni selezionati e temperature condivise in una sola richiesta cloud.",
+      "fields": {
+        "entity_id": {
+          "name": "Entità programma",
+          "description": "Una entità testo Programma originale RoCon."
+        },
+        "program": {
+          "name": "Programma",
+          "description": "Programma 1 o 2."
+        },
+        "days": {
+          "name": "Giorni",
+          "description": "Giorni della settimana associati alle tre fasce orarie."
+        },
+        "profiles": {
+          "name": "Temperature condivise",
+          "description": "Elenco opzionale dei tre profili di temperatura."
+        },
+        "expected": {
+          "name": "Valori originali",
+          "description": "Valori iniziali per evitare di sovrascrivere modifiche fatte altrove."
+        }
+      }
+    }
   }
 }
