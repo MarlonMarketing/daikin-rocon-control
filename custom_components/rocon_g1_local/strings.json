@@ -1,0 +1,60 @@
+{
+  "title": "RoCon Daikin Control",
+  "config": {
+    "step": {
+      "reauth_confirm": {
+        "title": "Update G1 LAN credentials",
+        "data": {
+          "host": "Private IPv4 address",
+          "api_key": "Existing G1 local API key"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure G1 LAN access",
+        "data": {
+          "host": "Private IPv4 address",
+          "api_key": "Existing G1 local API key"
+        }
+      },
+      "local": {
+        "title": "Connect to your G1 LAN API",
+        "description": "Experimental read-only integration. Requires an existing local API key, not your Daikin cloud password.",
+        "data": {
+          "host": "Private IPv4 address",
+          "api_key": "Existing G1 local API key"
+        }
+      },
+      "user": {
+        "title": "Scegli accesso RoCon",
+        "data": {
+          "connection_type": "Connessione"
+        }
+      },
+      "cloud": {
+        "title": "Collega Daikin Control cloud",
+        "description": "Credenziali della app DAIKIN Control. I comandi modificano temperature e programmi dell’impianto. Le conferme cloud non certificano la freschezza delle sonde. Le credenziali saranno conservate nella configurazione privata di Home Assistant.",
+        "data": {
+          "username": "Nome utente cloud",
+          "password": "Password cloud",
+          "enable_controls": "Abilita controlli cloud (temperature, modalità, boost e programmi)"
+        }
+      },
+      "installation": {
+        "title": "Scegli l’impianto del tuo account",
+        "data": {
+          "installation_id": "Impianto"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Servizio non raggiungibile o risposta incompatibile. Nessun comando è stato ritentato.",
+      "invalid_auth": "Accesso rifiutato. Verifica le credenziali cloud o la API key locale per la connessione scelta."
+    },
+    "abort": {
+      "already_configured": "This G1 address is already configured.",
+      "reauth_successful": "Local credentials updated.",
+      "reconfigure_successful": "Local configuration updated.",
+      "invalid_installation": "Impianto non presente in questo account."
+    }
+  }
+}

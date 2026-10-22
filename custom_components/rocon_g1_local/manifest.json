@@ -1,0 +1,17 @@
+{
+  "domain": "rocon_g1_local",
+  "name": "RoCon Daikin Control",
+  "codeowners": [
+    "@MarlonMarketing"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "http"
+  ],
+  "documentation": "https://github.com/MarlonMarketing/daikin-rocon-control",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/MarlonMarketing/daikin-rocon-control/issues",
+  "requirements": [],
+  "version": "0.4.0"
+}
