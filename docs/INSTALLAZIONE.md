@@ -1,6 +1,6 @@
 # Installazione da GitHub e prova
 
-Il componente 0.4.0 è sperimentale: controlli cloud e LAN in sola lettura. Non configura il gateway,
+Il componente 0.5.0 è sperimentale: letture e controlli cloud; LAN in sola lettura. Non configura il gateway,
 non recupera chiavi locali e non trasforma la password cloud in API key.
 Per il cloud servono le credenziali della app DAIKIN Control. Le API LAN sono un percorso separato.
 
@@ -31,6 +31,9 @@ directory. Riavvio manuale e configurazione come sopra. APK, firmware e strument
 di reverse engineering non sono necessari sul server Home Assistant.
 
 ## Interfaccia Climate Studio
+
+Per il nuovo template unificato con configurazione facile e consumi, seguire
+[RoCon Studio: installazione visuale](STUDIO.md). La scheda classica seguente resta disponibile.
 
 L'integrazione serve il proprio file statico con il metodo asincrono HA.
 Dopo che è stata caricata, aggiungere nelle risorse della dashboard:
