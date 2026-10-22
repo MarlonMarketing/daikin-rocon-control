@@ -1,0 +1,45 @@
+{
+  "images": [
+    {
+      "file": "g1_cablaggio_esterno.jpg",
+      "sha256": "269877f52302c996e506b96482e3901b2152d204f8dd12ade82acff826fb5a9d",
+      "width": 1957,
+      "height": 2000,
+      "metadata_check": "EXIF/GPS/XMP/comment/ICC absent",
+      "visual_review": "unique identifiers masked or outside crop"
+    },
+    {
+      "file": "g1_connettore_cavo_dettaglio.jpg",
+      "sha256": "158d103b0fdebf2dd4b620d80c8c36ebd7f2dd5af6751147ecdea0f8f94fd7d9",
+      "width": 675,
+      "height": 580,
+      "metadata_check": "EXIF/GPS/XMP/comment/ICC absent",
+      "visual_review": "unique identifiers masked or outside crop"
+    },
+    {
+      "file": "g1_etichetta_tecnica.jpg",
+      "sha256": "9dee44ec76b9daea40f64af4d382b69311e5dfe7e468d918aca3fee43c936f82",
+      "width": 1500,
+      "height": 2000,
+      "metadata_check": "EXIF/GPS/XMP/comment/ICC absent",
+      "visual_review": "unique identifiers masked or outside crop"
+    },
+    {
+      "file": "g1_modello_identificativi_oscurati.jpg",
+      "sha256": "aeee0d2289f0f33f68765e583111dbd4e79c017d1cd5edb22bbc36fac13fa7b5",
+      "width": 1500,
+      "height": 2000,
+      "metadata_check": "EXIF/GPS/XMP/comment/ICC absent",
+      "visual_review": "unique identifiers masked or outside crop"
+    },
+    {
+      "file": "g1_porte_e_connettore.jpg",
+      "sha256": "232977fe65534362b25e84fb5f0499b0dc1920e1b3fc7d67dbc5e16c6c9c765a",
+      "width": 1917,
+      "height": 2000,
+      "metadata_check": "EXIF/GPS/XMP/comment/ICC absent",
+      "visual_review": "unique identifiers masked or outside crop"
+    }
+  ],
+  "processing": "Local deterministic opaque masks/crops; no generative AI; reviewed copies only"
+}
