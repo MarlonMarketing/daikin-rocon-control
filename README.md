@@ -3,12 +3,16 @@
 Integrazione indipendente per **DAIKIN Control / ROTEX RoCon G1**, con accesso
 cloud e un percorso LAN sperimentale separato. Non usa ONECTA.
 
-**Versione sperimentale 0.4.1.** Letture e programmi cloud verificati anche in Home Assistant;
+**Versione sperimentale 0.5.0.** Letture e programmi cloud verificati anche in Home Assistant;
 controlli implementati e testati con risposte simulate. La scrittura sul gateway
 reale e la compatibilità tra firmware devono ancora essere verificate.
 Non installa automazioni né modifica setpoint durante l'installazione.
 
-La versione 0.4.1 gestisce anche circuiti già presenti nel cloud con nome vuoto.
+La versione 0.5.0 aggiunge **RoCon Studio**: programmi settimanali facili, solare,
+consumi e storico in una sola scheda, con tre palette selezionabili. I giorni
+selezionati e i profili si salvano con una sola richiesta, protetta da modifiche concorrenti.
+[Installazione visuale, template e demo](docs/STUDIO.md).
+Resta inclusa la gestione dei circuiti con nome vuoto introdotta nella 0.4.1.
 
 ## Cosa espone il cloud
 
