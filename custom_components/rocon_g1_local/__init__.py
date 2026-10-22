@@ -18,6 +18,7 @@ from .gateway import Gateway, GatewayAuthError, GatewayError
 from .cloud import CloudClient, CloudAuthError, CloudError, DAYS
 
 DOMAIN = "rocon_g1_local"
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 PLATFORMS = [Platform.SENSOR]
 CLOUD_PLATFORMS = [Platform.SENSOR, Platform.NUMBER, Platform.SELECT, Platform.SWITCH, Platform.TEXT]
 LOGGER = logging.getLogger(__name__)

@@ -1,0 +1,26 @@
+set_schedule:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: rocon_g1_local
+          domain: text
+    program:
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 2
+          step: 1
+          mode: box
+    days:
+      required: true
+      selector:
+        object:
+    profiles:
+      selector:
+        object:
+    expected:
+      selector:
+        object:

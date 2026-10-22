@@ -56,5 +56,33 @@
       "reconfigure_successful": "Configuration updated.",
       "invalid_installation": "Installation is not available in this account."
     }
+  },
+  "services": {
+    "set_schedule": {
+      "name": "Save weekly schedule",
+      "description": "Save selected days and shared temperature profiles in one cloud request.",
+      "fields": {
+        "entity_id": {
+          "name": "Program entity",
+          "description": "An original RoCon text entity for the selected program."
+        },
+        "program": {
+          "name": "Program",
+          "description": "Program 1 or 2."
+        },
+        "days": {
+          "name": "Days",
+          "description": "Selected weekday names mapped to three time intervals."
+        },
+        "profiles": {
+          "name": "Shared temperatures",
+          "description": "Optional list of three shared temperature profiles."
+        },
+        "expected": {
+          "name": "Original values",
+          "description": "Optional baseline to prevent overwriting changes made elsewhere."
+        }
+      }
+    }
   }
 }
