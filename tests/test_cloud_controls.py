@@ -27,6 +27,42 @@ def circuit(kind="water"):
 
 
 class CloudCommandTests(unittest.TestCase):
+    def test_schedule_changes_selected_days_and_shared_profiles_in_one_payload(self):
+        source=circuit();before=deepcopy(source)
+        text="06:00-08:00;15:00-17:00;00:00-00:00"
+        payload,changes=cloud.build_command(source,"schedule",{"program":1,"days":{day:text for day in cloud.DAYS[:5]},"profiles":[41,48,43]})
+        self.assertEqual(source,before)
+        self.assertEqual(payload["setTemperature"]["2"],{"set":48,"confirmed":42})
+        self.assertEqual(payload["timeProgram"]["1"]["saturday"],cloud._serialize(source["timeProgram"]["1"]["saturday"]))
+        self.assertEqual(payload["timeProgram"]["2"],cloud._serialize(source["timeProgram"]["2"]))
+        self.assertNotIn(("setTemperature","1"),changes)
+        self.assertNotIn(("timeProgram","1","monday","3"),changes)
+
+    def test_schedule_validation_refuses_bad_days_temperatures_and_intervals(self):
+        for value in [{"program":1,"days":{}},{"program":1,"days":{"Monday":"00:00-00:00;00:00-00:00;00:00-00:00"}},
+                      {"program":1,"days":{"monday":"06:00-08:00;07:00-09:00;00:00-00:00"}},
+                      {"program":1,"days":{"monday":"00:00-00:00;00:00-00:00;00:00-00:00"},"profiles":[41,999,43]}]:
+            with self.subTest(value=value),self.assertRaises(cloud.CloudError):cloud.build_command(circuit(),"schedule",value)
+
+    def test_schedule_baseline_blocks_overwriting_external_edit(self):
+        text="00:00-00:00;00:00-00:00;00:00-00:00"
+        value={"program":1,"days":{"monday":text},"expected":{"days":{"monday":text},"profiles":[41,42,43]}}
+        _,changes=cloud.build_command(circuit(),"schedule",value)
+        self.assertEqual(changes,{})
+        source=circuit();source["setTemperature"]["2"]=pair(44)
+        with self.assertRaises(cloud.CloudError):cloud.build_command(source,"schedule",value)
+        source=circuit();source["timeProgram"]["1"]["monday"]["1"]=pair({"start":"06:00","end":"08:00"})
+        with self.assertRaises(cloud.CloudError):cloud.build_command(source,"schedule",value)
+
+    def test_schedule_sends_one_put_and_noop_sends_none(self):
+        client,source,calls=self.client()
+        off="00:00-00:00;00:00-00:00;00:00-00:00"
+        client.command("test-installation","test-water","schedule",{"program":1,"days":{"monday":off},"profiles":[41,42,43]})
+        self.assertEqual(sum(method=="PUT" for _,method,_ in calls),0)
+        client.command("test-installation","test-water","schedule",{"program":1,"days":{day:"06:00-08:00;00:00-00:00;00:00-00:00" for day in cloud.DAYS}})
+        self.assertEqual(sum(method=="PUT" for _,method,_ in calls),1)
+        self.assertEqual(client.last_command,"sent_waiting_confirmation")
+
     def test_construction_does_not_load_certificates_in_ha_event_loop(self):
         with patch.object(cloud.ssl, "create_default_context", side_effect=AssertionError("Blocking certificate I/O")):
             cloud.CloudClient("synthetic-user", "synthetic-password")
