@@ -25,36 +25,36 @@
         }
       },
       "user": {
-        "title": "Scegli accesso RoCon",
+        "title": "Choose RoCon access",
         "data": {
-          "connection_type": "Connessione"
+          "connection_type": "Connection"
         }
       },
       "cloud": {
-        "title": "Collega Daikin Control cloud",
-        "description": "Credenziali della app DAIKIN Control. I comandi modificano temperature e programmi dell’impianto. Le conferme cloud non certificano la freschezza delle sonde. Le credenziali saranno conservate nella configurazione privata di Home Assistant.",
+        "title": "Connect Daikin Control cloud",
+        "description": "Use your DAIKIN Control app credentials. Enabling controls allows changes to heating and hot water settings. A cloud confirmation does not prove sensor freshness. Credentials are stored in Home Assistant private configuration.",
         "data": {
-          "username": "Nome utente cloud",
-          "password": "Password cloud",
-          "enable_controls": "Abilita controlli cloud (temperature, modalità, boost e programmi)"
+          "username": "Cloud username",
+          "password": "Cloud password",
+          "enable_controls": "Enable cloud controls (temperatures, modes, boost and schedules)"
         }
       },
       "installation": {
-        "title": "Scegli l’impianto del tuo account",
+        "title": "Choose an installation owned by your account",
         "data": {
-          "installation_id": "Impianto"
+          "installation_id": "Installation"
         }
       }
     },
     "error": {
-      "cannot_connect": "Servizio non raggiungibile o risposta incompatibile. Nessun comando è stato ritentato.",
-      "invalid_auth": "Accesso rifiutato. Verifica le credenziali cloud o la API key locale per la connessione scelta."
+      "cannot_connect": "Service unreachable or incompatible response. No device command was retried.",
+      "invalid_auth": "Authentication refused. Check the cloud credentials or the local API key for the selected connection."
     },
     "abort": {
-      "already_configured": "This G1 address is already configured.",
-      "reauth_successful": "Local credentials updated.",
-      "reconfigure_successful": "Local configuration updated.",
-      "invalid_installation": "Impianto non presente in questo account."
+      "already_configured": "This gateway or installation is already configured.",
+      "reauth_successful": "Credentials updated.",
+      "reconfigure_successful": "Configuration updated.",
+      "invalid_installation": "Installation is not available in this account."
     }
   }
 }
