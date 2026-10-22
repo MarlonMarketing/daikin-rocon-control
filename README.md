@@ -3,10 +3,12 @@
 Integrazione indipendente per **DAIKIN Control / ROTEX RoCon G1**, con accesso
 cloud e un percorso LAN sperimentale separato. Non usa ONECTA.
 
-**Versione sperimentale 0.4.0.** Letture cloud verificate durante la ricerca;
+**Versione sperimentale 0.4.1.** Letture e programmi cloud verificati anche in Home Assistant;
 controlli implementati e testati con risposte simulate. La scrittura sul gateway
 reale e la compatibilità tra firmware devono ancora essere verificate.
 Non installa automazioni né modifica setpoint durante l'installazione.
+
+La versione 0.4.1 gestisce anche circuiti già presenti nel cloud con nome vuoto.
 
 ## Cosa espone il cloud
 
