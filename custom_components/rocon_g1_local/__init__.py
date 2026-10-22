@@ -3,6 +3,7 @@ from datetime import timedelta
 import asyncio
 import logging
 from pathlib import Path
+import voluptuous as vol
 
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
@@ -10,9 +11,11 @@ from homeassistant.const import CONF_API_KEY, CONF_HOST, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, HomeAssistantError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import config_validation as cv
 
 from .gateway import Gateway, GatewayAuthError, GatewayError
-from .cloud import CloudClient, CloudAuthError, CloudError
+from .cloud import CloudClient, CloudAuthError, CloudError, DAYS
 
 DOMAIN = "rocon_g1_local"
 PLATFORMS = [Platform.SENSOR]
@@ -24,8 +27,34 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """Serve only the bundled public card, never gateway data or credentials."""
     await hass.http.async_register_static_paths([
         StaticPathConfig("/rocon_g1_local/rocon-climate-card.js",
-                         str(Path(__file__).parent / "frontend" / "rocon-climate-card.js"), False)
+                         str(Path(__file__).parent / "frontend" / "rocon-climate-card.js"), False),
+        StaticPathConfig("/rocon_g1_local/rocon-studio-card.js",
+                         str(Path(__file__).parent / "frontend" / "rocon-studio-card.js"), False)
     ])
+    async def set_schedule(call):
+        """One circuit PUT for selected days and shared profiles, never a queue."""
+        registered = er.async_get(hass).async_get(call.data["entity_id"])
+        if registered is None or registered.platform != DOMAIN or not registered.entity_id.startswith("text."):
+            raise HomeAssistantError("Choose an original RoCon program entity")
+        entry = hass.config_entries.async_get_entry(registered.config_entry_id)
+        if entry is None or entry.data.get("connection_type") != "cloud" or not hasattr(entry, "runtime_data"):
+            raise HomeAssistantError("RoCon cloud entry not loaded")
+        coordinator = entry.runtime_data
+        program = call.data["program"]
+        circuits = [c for c in coordinator.data.get("circuits", [])
+                    if any(registered.unique_id == f"{entry.entry_id}_{c['id']}_program_{program}_{day}" for day in DAYS)]
+        if len(circuits) != 1:
+            raise HomeAssistantError("Choose a matching RoCon program entity")
+        value = {key: call.data[key] for key in ("program", "days", "profiles", "expected") if key in call.data}
+        await coordinator.async_command(str(circuits[0]["id"]), "schedule", value)
+
+    hass.services.async_register(DOMAIN, "set_schedule", set_schedule, schema=vol.Schema({
+        vol.Required("entity_id"): cv.entity_id,
+        vol.Required("program"): vol.In([1, 2]),
+        vol.Required("days"): dict,
+        vol.Optional("profiles"): list,
+        vol.Optional("expected"): dict,
+    }))
     return True
 
 

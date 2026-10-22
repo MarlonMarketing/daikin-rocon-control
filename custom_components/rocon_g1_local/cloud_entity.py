@@ -39,6 +39,7 @@ class CloudEntity(CoordinatorEntity):
     @property
     def extra_state_attributes(self):
         attributes = {"source": "rocon_cloud", "rocon_gateway": self.entry_id,
+            "rocon_circuit": self.circuit_id, "rocon_index": self.circuit.get("index"),
             "rocon_device": self.circuit.get("type"), "rocon_field": self.key,
             "rocon_section": "setting" if self.path else "status",
             "measurement_timestamp_available": False,

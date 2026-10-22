@@ -161,6 +161,39 @@ def build_command(circuit, command, value, installation=None):
         if kind == "water" or not number(value) or not 0 <= value <= 360 or value % 15:
             raise CloudError("Party duration must be 0–360 minutes, step 15")
         changes[("operationMode", "party", "hours")] = int(value)
+    elif command == "schedule":
+        if not isinstance(value, dict) or set(value) - {"program", "days", "profiles", "expected"}:
+            raise CloudError("Invalid schedule request")
+        program = str(value.get("program"))
+        days = value.get("days")
+        if program not in ("1", "2") or not isinstance(days, dict) or not days or set(days) - set(DAYS):
+            raise CloudError("Invalid schedule days or program")
+        expected = value.get("expected")
+        if expected is not None:
+            if not isinstance(expected, dict) or set(expected) != {"days", "profiles"} or not isinstance(expected["days"], dict) or set(expected["days"]) != set(days):
+                raise CloudError("Invalid schedule baseline")
+            for day, text in expected["days"].items():
+                for slot, interval in enumerate(parse_program(text), 1):
+                    if effective(path_get(circuit, ("timeProgram", program, day, str(slot)))) != interval:
+                        raise CloudError("Schedule changed elsewhere; reload before saving")
+            if expected["profiles"] != [effective(path_get(circuit, ("setTemperature", str(i)))) for i in (1, 2, 3)]:
+                raise CloudError("Profiles changed elsewhere; reload before saving")
+        profiles = value.get("profiles")
+        if profiles is not None:
+            if not isinstance(profiles, list) or len(profiles) != 3:
+                raise CloudError("Three shared profiles required")
+            minimum, maximum = (10, 70) if kind == "water" else (5, 40)
+            for slot, temperature in enumerate(profiles, 1):
+                if not number(temperature) or not minimum <= temperature <= maximum or not float(temperature * 2).is_integer():
+                    raise CloudError("Temperature outside app range or half-degree step")
+                path = ("setTemperature", str(slot))
+                if temperature != effective(path_get(circuit, path)):
+                    changes[path] = temperature
+        for day, text in days.items():
+            for slot, interval in enumerate(parse_program(text), 1):
+                path = ("timeProgram", program, day, str(slot))
+                if interval != effective(path_get(circuit, path)):
+                    changes[path] = interval
     elif command.startswith("program_"):
         pieces = command.split("_")
         if len(pieces) != 3 or pieces[1] not in ("1", "2") or pieces[2] not in DAYS:

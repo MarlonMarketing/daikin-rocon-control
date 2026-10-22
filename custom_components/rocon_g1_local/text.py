@@ -26,7 +26,7 @@ class CloudText(CloudEntity, TextEntity):
 
     def __init__(self, coordinator, entry, circuit, key, name, path):
         super().__init__(coordinator, entry, circuit, key, name, path)
-        self._attr_entity_registry_enabled_default = not key.startswith("program_") and key != "name"
+        self._attr_entity_registry_enabled_default = key != "name"
         # Existing installations may have an unnamed circuit. Permit that read
         # state; the command validator still rejects submitting an empty name.
         if key == "name":
