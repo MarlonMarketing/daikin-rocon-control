@@ -1,0 +1,60 @@
+{
+  "title": "RoCon Daikin Control",
+  "config": {
+    "step": {
+      "reauth_confirm": {
+        "title": "Update G1 LAN credentials",
+        "data": {
+          "host": "Private IPv4 address",
+          "api_key": "Existing G1 local API key"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure G1 LAN access",
+        "data": {
+          "host": "Private IPv4 address",
+          "api_key": "Existing G1 local API key"
+        }
+      },
+      "local": {
+        "title": "Connect to your G1 LAN API",
+        "description": "Experimental read-only integration. Requires an existing local API key, not your Daikin cloud password.",
+        "data": {
+          "host": "Private IPv4 address",
+          "api_key": "Existing G1 local API key"
+        }
+      },
+      "user": {
+        "title": "Choose RoCon access",
+        "data": {
+          "connection_type": "Connection"
+        }
+      },
+      "cloud": {
+        "title": "Connect Daikin Control cloud",
+        "description": "Use your DAIKIN Control app credentials. Enabling controls allows changes to heating and hot water settings. A cloud confirmation does not prove sensor freshness. Credentials are stored in Home Assistant private configuration.",
+        "data": {
+          "username": "Cloud username",
+          "password": "Cloud password",
+          "enable_controls": "Enable cloud controls (temperatures, modes, boost and schedules)"
+        }
+      },
+      "installation": {
+        "title": "Choose an installation owned by your account",
+        "data": {
+          "installation_id": "Installation"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Service unreachable or incompatible response. No device command was retried.",
+      "invalid_auth": "Authentication refused. Check the cloud credentials or the local API key for the selected connection."
+    },
+    "abort": {
+      "already_configured": "This gateway or installation is already configured.",
+      "reauth_successful": "Credentials updated.",
+      "reconfigure_successful": "Configuration updated.",
+      "invalid_installation": "Installation is not available in this account."
+    }
+  }
+}
