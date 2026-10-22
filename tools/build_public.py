@@ -16,9 +16,16 @@ PUBLIC_IMAGES = (
 )
 ALLOWED_SUFFIXES = {".py", ".ps1", ".sh", ".md", ".json", ".toml", ".txt"}
 PUBLIC_ASSETS = (
+    "custom_components/rocon_g1_local/services.yaml",
     "docs/images/climate-studio-demo.png",
+    "docs/images/studio-solar-demo.png",
+    "docs/images/studio-night-demo.png",
     "custom_components/rocon_g1_local/frontend/rocon-climate-card.js",
+    "custom_components/rocon_g1_local/frontend/rocon-studio-card.js",
+    "tests/frontend/studio.test.cjs",
     "docs/interface-preview.html",
+    "docs/studio-preview.html",
+    "docs/configurazione-semplice.html",
     ".github/workflows/validate.yml",
 )
 
